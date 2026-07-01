@@ -1,41 +1,28 @@
-node_modules/
-dist/
+# Environment
 .env
 *.log
 
-package-lock.json
+# Root
+node_modules/
+dist/
 
+# Backend
+backend/node_modules/
+backend/env/
+backend/__pycache__/
+backend/*.py[cod]
+backend/*.pyo
+backend/*.pyd
+backend/.env
+
+# Uploaded files
 backend/uploaded/*
 !backend/uploaded/.gitkeep
 
-
-backend/__pycache__/
-backend//*.py[cod]
-backend/*.pyo
-backend/*.pyd
-
-
-backend/env/
-
-
-backend/.env
-
-
-backend/node_modules/
-backend/npm-debug.log*
-backend/package-lock.json
-
-backend/uploaded/*
-backend/!uploaded/.gitkeep
-
-
+# Generated files
 backend/ranked_candidates.csv
 backend/*.csv
 
-
+# Frontend
 frontend/node_modules/
-frontend/.git
-frontend/package-lock.json
 frontend/dist/
-
-
