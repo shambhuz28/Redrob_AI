@@ -1,0 +1,7 @@
+google-genai
+python-dotenv
+PyMuPDF
+numpy
+pandas
+qdrant-client
+sentence-transformers
