@@ -1,115 +1,82 @@
-# RedrobAI Resume Filter Website
+# Setup Instructions
 
-MERN-style app with separate frontend and backend folders.
-
-## Setup
+## 1. Clone the Repository
 
 ```bash
-npm run install:all
-cp backend/.env.example backend/.env
+git clone https://github.com/shambhuz28/Redrob_AI.git
+cd RedrobAI
 ```
 
-Place your existing `redrob_backend.py` file inside `backend`.
+---
+
+## 2. Install Dependencies
+
+### Backend
+
+```bash
+cd backend
+npm install
+pip install -r requirements.txt
+```
+
+### Frontend
+
+```bash
+cd ../frontend
+npm install
+```
+
+---
+
+## 3. Configure Environment Variables
+
+Create a `.env` file inside the `backend` directory with the following variables:
 
 ```env
-PYTHON_SCRIPT=redrob_backend.py
+QDRANT_API_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3MiOiJtIiwic3ViamVjdCI6ImFwaS1rZXk6ODkwNjg4OWMtNDE4Yy00Nzk2LTg0MzgtMzM3Nzg4MTkzY2ZiIn0.XL6D03Q0OGfYY9zyuAG4O7JLbNrd8D-e8Cb_tcP7Ivc
+QDRANT_URL=https://056f99e7-5645-4d17-8066-1be39b8a205e.eu-west-1-0.aws.cloud.qdrant.io
+QDRANT_COLLECTION=Candidates
+EMBEDDING_MODEL=thenlper/gte-base
+
+GEMINI_API_KEY=AQ.Ab8RN6JBPKh48iv7xqwKudgAWJiiHLnexSyyJ_5H_5PwAcH6UQ
 ```
 
-The backend starts the script in a background job like this by default:
+
+
+---
+
+## 4. Start the Backend
 
 ```bash
-python3 redrob_backend.py /absolute/path/to/uploaded/file.pdf
-```
-
-The upload request does not wait for Python to finish. `POST /api/match` returns a `jobId`, and clients poll `GET /api/job/:jobId` until the job is completed or failed.
-
-## CSV Output
-
-The uploaded PDF/DOCX path is passed to `redrob_backend.py`. For each background job, the backend sets `CSV_OUTPUT_PATH` to a unique file under `backend/job-results/`, so concurrent jobs do not overwrite each other. The backend looks for the CSV in this order:
-
-1. The per-job `CSV_OUTPUT_PATH` set for the Python child process
-2. A `.csv` path printed by the Python script to stdout
-3. `backend/ranked_candidates.csv`
-4. CSV content printed directly to stdout
-
-## Run
-
-```bash
+cd backend
 npm run dev
 ```
 
-Frontend: `http://localhost:5173`
+---
 
-Backend: `http://localhost:5000`
+## 5. Start the Frontend
 
-## Deployment
-
-Frontend builds read `VITE_API_URL`, for example:
-
-```env
-VITE_API_URL=https://redrob-ai-backend.onrender.com
-```
-
-Backend deploys need both Node and Python dependencies. On Render, use a backend build command like:
+Open a new terminal.
 
 ```bash
-npm install && pip install -r requirements.txt
+cd frontend
+npm run dev
 ```
 
-Set these backend environment variables in Render:
+---
 
-```env
-FRONTEND_ORIGIN=https://redrob-ai-frontend-tau.vercel.app
-PYTHON_COMMAND=python3
-PYTHON_SCRIPT=redrob_backend.py
-PYTHON_TIMEOUT_MS=300000
-JOB_TTL_MS=1800000
-JOB_CLEANUP_INTERVAL_MS=300000
-GEMINI_API_KEY=...
-QDRANT_URL=...
-QDRANT_API_KEY=...
-QDRANT_COLLECTION=Candidates
-CANDIDATE_QUERY_LIMIT=150
-HYDRATE_MISSING_SCORES=false
-TOP_CANDIDATE_LIMIT=100
-CANDIDATES_JSONL=/path/to/dataset/info/candidates.jsonl
+## 6. Access the Application
+
+Frontend:
+
+```
+http://localhost:5173
 ```
 
-`CANDIDATES_JSONL` must point to a file that exists in the deployed backend environment.
-## API Flow
+Backend:
 
-Start matching:
-
-```http
-POST /api/match
+```
+http://localhost:5000
 ```
 
-Response:
-
-```json
-{ "jobId": "<uuid>" }
-```
-
-Poll status:
-
-```http
-GET /api/job/<uuid>
-```
-
-Queued/running response:
-
-```json
-{ "jobId": "<uuid>", "status": "running", "progress": 45 }
-```
-
-Completed response includes the same CSV payload shape used by the old synchronous endpoint:
-
-```json
-{
-  "jobId": "<uuid>",
-  "status": "completed",
-  "progress": 100,
-  "csvPath": "...",
-  "rows": { "headers": [], "records": [] }
-}
-```
+#Keys are provided here beacuse embeddings are stored on cloud and fetching them requires API key
